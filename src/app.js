@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 
 app.use(express.json());
 
-mongoose.connect(process.env.MONGODB_URL, {
+mongoose.connect(`${process.env.MONGODB_URL}`, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 });
@@ -17,6 +17,8 @@ db.once('open', () => {
   console.info('Conexão feita com sucesso');
 });
 
+const leitores = require('./routes/leitoresRoute');
+
 app.use('/', (req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
   res.header(
@@ -26,5 +28,7 @@ app.use('/', (req, res, next) => {
   console.info('Nova requisição realizada');
   next();
 });
+
+app.use('/leitores', leitores);
 
 module.exports = app;
