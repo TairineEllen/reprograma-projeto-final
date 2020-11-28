@@ -1,0 +1,20 @@
+{
+  "name": "projeto-final",
+  "version": "1.0.0",
+  "description": "Para o meu projeto, me inspirei em iniciativas como Esqueça Um Livro e Livro Viajante. Ou seja, livros que transitam entre leitores, tornando-se objetos vivos que estão sempre sendo lidos.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TairineEllen/reprograma-projeto-final.git"
+  },
+  "author": "TairineEllen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TairineEllen/reprograma-projeto-final/issues"
+  },
+  "homepage": "https://github.com/TairineEllen/reprograma-projeto-final#readme"
+}
