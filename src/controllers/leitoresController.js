@@ -30,6 +30,17 @@ const registerNewReader = (req, res) => {
   });  
 };
 
+const getAllReaders = (req, res) => {
+  leitoresModel.find({}, { nome: 1, email: 1, bairro: 1}, (err, leitores) => {
+    if (err) {
+      return res.status(424).send({ message: err.message });
+    };   
+    return res.status(200).send(leitores);
+  });
+  
+};
+
 module.exports = {
-  registerNewReader  
+  registerNewReader,
+  getAllReaders
 };
