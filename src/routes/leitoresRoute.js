@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/leitoresController');
 
-router.get('/', controller.getAllLeitores);
+router.post('/', controller.registerNewReader);
 
 module.exports = router;
 
