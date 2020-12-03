@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const livrosSchema = new mongoose.Schema({
   titulo: { type: String },
   autoria: { type: String },
-  disponivel: { type: Boolean }
+  disponivel: { type: Boolean },
+  bairro: { type: String }
 }, {
   versionKey: false
 });

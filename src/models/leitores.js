@@ -4,7 +4,7 @@ const { livrosSchema } = require('./livros');
 const leitoresSchema = new mongoose.Schema({
   nome: { type: String },
   email: { type: String },
-  bairro: { type: String },
+  senha: { type: String },
   livros: [livrosSchema]
 }, {
   versionKey: false
