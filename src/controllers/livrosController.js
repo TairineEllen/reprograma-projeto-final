@@ -51,9 +51,26 @@ const updateLocationAndStatus = (req, res) => {
   });  
 };
 
+const deleteBook = (req, res) => {
+  const id = req.params.id;
+  livrosModel.find({ _id: id }, (err, livro) => {
+    if (!livro) {
+      return res.status(404).send('Livro não encontrado');
+    } else {
+      livrosModel.deleteOne({ _id: id }, err => {
+        if (err) {
+          return res.status(424).send({ message: err.message });
+        };
+        return res.status(200).send('Livro excluído com sucesso');
+      });
+    };
+  });
+};
+
 module.exports = {
   getAllBooks,
   registerNewBook,
   updateBook,
-  updateLocationAndStatus
+  updateLocationAndStatus,
+  deleteBook
 };
