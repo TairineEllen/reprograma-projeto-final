@@ -18,6 +18,7 @@ db.once('open', () => {
 });
 
 const leitores = require('./routes/leitoresRoute');
+const books = require('./routes/livrosRoute');
 
 app.use('/', (req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
@@ -30,5 +31,6 @@ app.use('/', (req, res, next) => {
 });
 
 app.use('/leitores', leitores);
+app.use('/livros', books);
 
 module.exports = app;
