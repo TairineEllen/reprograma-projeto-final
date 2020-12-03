@@ -42,7 +42,7 @@ const getAllReaders = (req, res) => {
 const updateReader = (req, res) => {
   const id = req.params.id;
   leitoresModel.find({ _id: id }, (err, leitor) => {    
-    if (leitor == undefined) {
+    if (!leitor) {
       return res.status(404).send('Leitor não encontrado');
     } else {
       leitoresModel.updateOne({ _id: id }, { $set: req.body }, err => {
@@ -55,8 +55,25 @@ const updateReader = (req, res) => {
   }); 
 };
 
+const deleteReader = (req, res) => {
+  const id = req.params.id;
+  leitoresModel.find({ _id: id }, (err, leitor) => {
+    if (!leitor) {
+      return res.status(404).res.send('Leitor não encontrado');
+    } else {
+      leitoresModel.deleteOne({ _id: id }, err => {
+        if (err) {
+          return res.status(424).send({ message: err.message });
+        };
+        return res.status(200).send('Leitor excluído com sucesso');
+      });
+    };
+  });
+};
+
 module.exports = {
   registerNewReader,
   getAllReaders,
-  updateReader
+  updateReader,
+  deleteReader
 };
