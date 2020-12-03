@@ -36,11 +36,27 @@ const getAllReaders = (req, res) => {
       return res.status(424).send({ message: err.message });
     };   
     return res.status(200).send(leitores);
-  });
-  
+  });  
+};
+
+const updateReader = (req, res) => {
+  const id = req.params.id;
+  leitoresModel.find({ _id: id }, (err, leitor) => {    
+    if (leitor == undefined) {
+      return res.status(404).send('Leitor não encontrado');
+    } else {
+      leitoresModel.updateOne({ _id: id }, { $set: req.body }, err => {
+        if (err) {
+          return res.status(424).send({ message: err.message });
+        };
+        return res.status(200).send('Informações atualizadas com sucesso!');         
+      });      
+    };         
+  }); 
 };
 
 module.exports = {
   registerNewReader,
-  getAllReaders
+  getAllReaders,
+  updateReader
 };
