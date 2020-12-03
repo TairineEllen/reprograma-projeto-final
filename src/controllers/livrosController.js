@@ -19,7 +19,24 @@ const registerNewBook = (req, res) => {
   });
 };
 
+const updateBook = (req, res) => {
+  const id = req.params.id;
+  livrosModel.find({ _id: id }, (err, livro) => {
+    if (!livro) {
+      return res.status(404).send('Livro não encontrado')
+    } else {
+      livrosModel.updateOne({ _id: id }, { $set: req.body }, err => {
+        if (err) {
+          return res.status(424).send({ message: err.message });
+        };
+        return res.status(200).send('Informações atualizadas com sucesso');
+      });      
+    };
+  });
+};
+
 module.exports = {
   getAllBooks,
-  registerNewBook
+  registerNewBook,
+  updateBook
 };
