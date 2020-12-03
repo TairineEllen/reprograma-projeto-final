@@ -23,7 +23,7 @@ const updateBook = (req, res) => {
   const id = req.params.id;
   livrosModel.find({ _id: id }, (err, livro) => {
     if (!livro) {
-      return res.status(404).send('Livro não encontrado')
+      return res.status(404).send('Livro não encontrado');
     } else {
       livrosModel.updateOne({ _id: id }, { $set: req.body }, err => {
         if (err) {
@@ -35,8 +35,25 @@ const updateBook = (req, res) => {
   });
 };
 
+const updateLocationAndStatus = (req, res) => {
+  const id = req.params.id;
+  livrosModel.find({ _id: id }, (err, livro) => {
+    if (!livro) {
+      return res.status(404).send('Livro não encontrado');
+    } else {
+      livrosModel.updateOne({ _id: id }, { $set: { disponivel: req.body.disponivel, bairro: req.body.bairro }}, err => {
+        if (err) {
+          return res.status(424).send({ message: err.message });
+        };
+        return res.status(200).send('Status do livro atualizado com sucesso');
+      });
+    };
+  });  
+};
+
 module.exports = {
   getAllBooks,
   registerNewBook,
-  updateBook
+  updateBook,
+  updateLocationAndStatus
 };
