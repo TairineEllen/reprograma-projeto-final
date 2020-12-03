@@ -9,6 +9,19 @@ const getAllBooks = (req, res) => {
   });
 };
 
+const getAvailableBooks = (req, res) => {
+  livrosModel.find({ disponivel: true }, (err, livros) => {
+    if (err) {
+      return res.status(424).send({ message: err.message });
+    }; 
+    if (!livros.length) {
+      return res.status(404).send('Não há livros disponíveis para empréstimo');
+    } else {
+      return res.status(200).send(livros);
+    };
+  });
+};
+
 const registerNewBook = (req, res) => {
   const newBook = new livrosModel(req.body);
   newBook.save(err => {
@@ -69,6 +82,7 @@ const deleteBook = (req, res) => {
 
 module.exports = {
   getAllBooks,
+  getAvailableBooks,
   registerNewBook,
   updateBook,
   updateLocationAndStatus,
