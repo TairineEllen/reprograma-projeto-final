@@ -1,7 +1,8 @@
 const { livrosModel } = require('../models/livros');
 
 const getAllBooks = (req, res) => {
-  livrosModel.find((err, livros) => {
+  const parametros = req.query;  
+  livrosModel.find(parametros, (err, livros) => {
     if (err) {
       return res.status(424).send({ message: err.message });
     };
@@ -21,6 +22,7 @@ const getAvailableBooks = (req, res) => {
     };
   });
 };
+
 
 const registerNewBook = (req, res) => {
   const newBook = new livrosModel(req.body);
@@ -54,7 +56,7 @@ const updateLocationAndStatus = (req, res) => {
     if (!livro) {
       return res.status(404).send('Livro não encontrado');
     } else {
-      livrosModel.updateOne({ _id: id }, { $set: { disponivel: req.body.disponivel, bairro: req.body.bairro }}, err => {
+      livrosModel.updateOne({ _id: id }, { $set: { disponivel: req.body.disponivel, bairro: req.body.bairro } }, err => {
         if (err) {
           return res.status(424).send({ message: err.message });
         };
