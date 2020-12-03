@@ -5,12 +5,13 @@ const registerNewReader = (req, res) => {
   const newReader = new leitoresModel({
     nome: req.body.nome,
     email: req.body.email,
-    bairro: req.body.bairro,
+    senha: req.body.senha,
     livros: req.body.livros.map(livro => {
       const book = new livrosModel({
         titulo: livro.titulo,
         autoria: livro.autoria,
-        disponivel: livro.disponivel
+        disponivel: livro.disponivel,
+        bairro: livro.bairro
       });
 
       book.save(err => {
@@ -31,7 +32,7 @@ const registerNewReader = (req, res) => {
 };
 
 const getAllReaders = (req, res) => {
-  leitoresModel.find({}, { nome: 1, email: 1, bairro: 1}, (err, leitores) => {
+  leitoresModel.find({}, { nome: 1, email: 1}, (err, leitores) => {
     if (err) {
       return res.status(424).send({ message: err.message });
     };   
