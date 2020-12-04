@@ -17,6 +17,7 @@ db.once('open', () => {
   console.info('Conexão feita com sucesso');
 });
 
+const index = require('./routes/index');
 const leitores = require('./routes/leitoresRoute');
 const books = require('./routes/livrosRoute');
 
@@ -30,6 +31,7 @@ app.use('/', (req, res, next) => {
   next();
 });
 
+app.use('/', index);
 app.use('/leitores', leitores);
 app.use('/livros', books);
 
