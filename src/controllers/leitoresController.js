@@ -21,11 +21,21 @@ const registerNewReader = (req, res) => {
 };
 
 const getAllReaders = (req, res) => {
-  leitoresModel.find({}, { codLeitor: 1, nome: 1, email: 1 }, (err, leitores) => {
+  readersModel.find({}, { nome: 1, email: 1, livros: 1 }, (err, readers) => {
     if (err) {
       return res.status(424).send({ message: err.message });
     };
-    return res.status(200).send(leitores);
+    return res.status(200).send(readers);
+  });
+};
+
+const getReaderById = (req, res) => {
+  const idReader = req.params.idReader;  
+  readersModel.findById(idReader, (err, reader) => {
+    if (!reader) {
+      return res.status(404).send('Leitor não encontrado');
+    };
+    return res.status(200).send(reader);
   });
 };
 
@@ -64,6 +74,7 @@ const deleteReader = (req, res) => {
 module.exports = {
   registerNewReader,
   getAllReaders,
+  getReaderById,
   updateReader,
   deleteReader
 };
