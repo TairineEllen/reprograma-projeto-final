@@ -40,12 +40,12 @@ const getReaderById = (req, res) => {
 };
 
 const updateReader = (req, res) => {
-  const id = req.params.id;
-  leitoresModel.find({ _id: id }, (err, leitor) => {
-    if (!leitor) {
+  const idReader = req.params.idReader;
+  readersModel.find({ _id: idReader }, (err, reader) => {
+    if (!reader) {
       return res.status(404).send('Leitor não encontrado');
     } else {
-      leitoresModel.updateOne({ _id: id }, { $set: req.body }, err => {
+      readersModel.updateOne({ _id: idReader }, { $set: req.body }, err => {
         if (err) {
           return res.status(424).send({ message: err.message });
         };
