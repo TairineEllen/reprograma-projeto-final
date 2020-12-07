@@ -1,18 +1,36 @@
 const mongoose = require('mongoose');
-const { livrosSchema } = require('./livros');
+const { booksSchema } = require('./livros')
 
-const leitoresSchema = new mongoose.Schema({
+const readersSchema = new mongoose.Schema({
   nome: { type: String },
   email: { type: String },
   senha: { type: String },
-  livros: [livrosSchema]
+  livros: [booksSchema]
 }, {
   versionKey: false
 });
 
-const leitoresModel = mongoose.model('leitores', leitoresSchema);
+const readersModel = mongoose.model('readers', readersSchema);
 
 module.exports = {
-  leitoresModel,
-  leitoresSchema
+  readersModel,
+  readersSchema
 };
+
+// const mongoose = require('mongoose');
+
+// const leitoresSchema = new mongoose.Schema({
+//   codLeitor: { type: Number },
+//   nome: { type: String },
+//   email: { type: String },
+//   senha: { type: String }
+// }, {
+//   versionKey: false
+// });
+
+// const leitoresModel = mongoose.model('leitores', leitoresSchema);
+
+// module.exports = {
+//   leitoresModel,
+//   leitoresSchema
+// };
