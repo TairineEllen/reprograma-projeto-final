@@ -9,9 +9,9 @@ const registerNewReader = (req, res) => {
       if (err) {
         return res.status(500).send({ message: err.message });
       };
-    });    
-  }); 
-  
+    });
+  });
+
   newReader.save((err) => {
     if (err) {
       return res.status(500).send({ message: err.message });
@@ -30,7 +30,7 @@ const getAllReaders = (req, res) => {
 };
 
 const getReaderById = (req, res) => {
-  const idReader = req.params.idReader;  
+  const idReader = req.params.idReader;
   readersModel.findById(idReader, (err, reader) => {
     if (!reader) {
       return res.status(404).send('Leitor não encontrado');
@@ -54,14 +54,19 @@ const updateReader = (req, res) => {
 
 const deleteReader = (req, res) => {
   const idReader = req.params.idReader;
-  readersModel.findByIdAndDelete(idReader, (err, reader) => {
-    if (err) {
+  readersModel.findById(idReader, (err, reader) => {
+    if (err) { 
       return res.status(500).send({ message: err.message });
     };
     if (!reader) {
-      return res.status(404).send('Leitor não encontrado');
+      return res.status(404).send('Leitor(a) não encontrado(a)');
+    } else if (reader.livros.length) {
+      return res.status(405).send('Leitor possui livros cadastrados e não pode ser excluído.');
+    } else {
+      readersModel.findByIdAndDelete(idReader, err => {
+        return res.status(200).send('Leitor(a) excluído(a) com sucesso');
+      });
     };
-    return res.status(200).send('Leitor excluído com sucesso');    
   });
 };
 
