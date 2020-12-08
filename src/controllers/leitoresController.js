@@ -41,17 +41,14 @@ const getReaderById = (req, res) => {
 
 const updateReader = (req, res) => {
   const idReader = req.params.idReader;
-  readersModel.find({ _id: idReader }, (err, reader) => {
+  readersModel.findByIdAndUpdate(idReader, req.body, { new: true }, (err, reader) => {
+    if (err) {
+      return res.status(500).send({ message: err.message });
+    };
     if (!reader) {
       return res.status(404).send('Leitor não encontrado');
-    } else {
-      readersModel.updateOne({ _id: idReader }, { $set: req.body }, err => {
-        if (err) {
-          return res.status(424).send({ message: err.message });
-        };
-        return res.status(200).send('Informações atualizadas com sucesso!');
-      });
     };
+    return res.status(200).send(reader);
   });
 };
 
@@ -61,11 +58,9 @@ const deleteReader = (req, res) => {
     if (err) {
       return res.status(500).send({ message: err.message });
     };
-
     if (!reader) {
       return res.status(404).send('Leitor não encontrado');
     };
-
     return res.status(200).send('Leitor excluído com sucesso');    
   });
 };
