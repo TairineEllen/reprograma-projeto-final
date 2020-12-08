@@ -65,17 +65,29 @@ const registerNewBook = (req, res) => {
 };
 
 const updateBook = (req, res) => {
-  const id = req.params.id;
-  livrosModel.find({ _id: id }, (err, livro) => {
-    if (!livro) {
-      return res.status(404).send('Livro não encontrado');
+  const idReader = req.params.idReader;
+  readersModel.findById(idReader, (err, reader) => {
+    if (err) {
+      return res.status(500).send({ message: err.message });
+    };
+    if (!reader) {
+      return res.status(404).send('Leitor(a) não encontrado(a)');
     } else {
-      livrosModel.updateOne({ _id: id }, { $set: req.body }, err => {
+      const idBook = req.params.idBook;
+      booksModel.findByIdAndUpdate(idBook, req.body, { new: true }, (err, book) => {
         if (err) {
-          return res.status(424).send({ message: err.message });
+          return res.status(500).send({ message: err.message });
         };
-        return res.status(200).send('Informações atualizadas com sucesso');
+        if (!book) {
+          return res.status(404).send('Livro não encontrado');
+        } else {
+          return res.status(200).send(book);
+        };
       });
+      const booktToBeUpdated = reader.livros.find(book => book._id == idBook);
+      const index = reader.livros.indexOf(booktToBeUpdated);
+      reader.livros.splice(index, 1, req.body);
+      reader.save();
     };
   });
 };
@@ -120,7 +132,7 @@ const deleteBook = (req, res) => {
       const index = reader.livros.indexOf(bookToBeDeleted);
       reader.livros.splice(index, 1);
       reader.save();
-    }; 
+    };
   });
 };
 
