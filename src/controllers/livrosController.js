@@ -58,10 +58,12 @@ const registerNewBook = (req, res) => {
       return res.status(404).send('Leitor(a) não encontrado(a)')
     } else {
       reader.livros.push(newBook);
+      reader.save();
       return res.status(201).send(reader.livros);
     };
   });
 };
+
 
 const updateBook = (req, res) => {
   const id = req.params.id;
