@@ -7,7 +7,7 @@ router.post('/', controller.registerNewReader);
 router.get('/', controller.getAllReaders);
 router.get('/:idReader', controller.getReaderById);
 router.put('/:idReader', controller.updateReader);
-router.delete('/:id', controller.deleteReader);
+router.delete('/:idReader', controller.deleteReader);
 
 module.exports = router;
 
