@@ -1,4 +1,4 @@
-const { booksModel } = require('../models/livros');
+const { booksModel, booksSchema } = require('../models/livros');
 const { readersModel } = require('../models/leitores');
 
 const getAllBooks = (req, res) => {
@@ -93,17 +93,24 @@ const updateBook = (req, res) => {
 };
 
 const updateLocationAndStatus = (req, res) => {
-  const id = req.params.id;
-  livrosModel.find({ _id: id }, (err, livro) => {
-    if (!livro) {
+  const idBook = req.params.idBook;
+  booksModel.findByIdAndUpdate(idBook, req.body, { new: true }, (err, book) => {
+    if (err) {
+      return res.status(500).send({ message: err.message });
+    };
+    if (!book) {
       return res.status(404).send('Livro não encontrado');
     } else {
-      livrosModel.updateOne({ _id: id }, { $set: { disponivel: req.body.disponivel, bairro: req.body.bairro } }, err => {
-        if (err) {
-          return res.status(424).send({ message: err.message });
-        };
-        return res.status(200).send('Status do livro atualizado com sucesso');
-      });
+      return res.status(200).send(book);
+    };    
+  });
+  
+  readersModel.findOneAndUpdate(
+    { 'livros._id': idBook},
+    { $set: { 'livros.$.bairro': req.body.bairro, 'livros.$.disponivel': req.body.disponivel } },
+    { new: true }, (err, reader) => {
+    if (err) {
+      return res.status(500).send({ message: err.message });
     };
   });
 };
