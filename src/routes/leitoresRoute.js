@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const controller = require('../controllers/leitoresController');
-const { getBooksByReader, registerNewBook, updateBook } = require('../controllers/livrosController');
+const { getBooksByReader, registerNewBook, updateBook, deleteBook } = require('../controllers/livrosController');
 
 
 router.post('/', controller.registerNewReader);
@@ -12,6 +12,7 @@ router.get('/:idReader/livros', getBooksByReader);
 router.put('/:idReader', controller.updateReader);
 router.put('/:idReader/livros/:idBook', updateBook);
 router.delete('/:idReader', controller.deleteReader);
+router.delete('/:idReader/livros/:idBook', deleteBook);
 
 module.exports = router;
 

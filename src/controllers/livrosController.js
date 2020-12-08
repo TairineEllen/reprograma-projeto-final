@@ -28,7 +28,7 @@ const getBooksByReader = (req, res) => {
 };
 
 const getAvailableBooks = (req, res) => {
-  booksModel.find({ disponivel: false }, (err, books) => {
+  booksModel.find({ disponivel: true }, (err, books) => {
     if (err) {
       return res.status(424).send({ message: err.message });
     };
@@ -64,7 +64,6 @@ const registerNewBook = (req, res) => {
   });
 };
 
-
 const updateBook = (req, res) => {
   const id = req.params.id;
   livrosModel.find({ _id: id }, (err, livro) => {
@@ -98,18 +97,30 @@ const updateLocationAndStatus = (req, res) => {
 };
 
 const deleteBook = (req, res) => {
-  const id = req.params.id;
-  livrosModel.find({ _id: id }, (err, livro) => {
-    if (!livro) {
-      return res.status(404).send('Livro não encontrado');
-    } else {
-      livrosModel.deleteOne({ _id: id }, err => {
-        if (err) {
-          return res.status(424).send({ message: err.message });
-        };
-        return res.status(200).send('Livro excluído com sucesso');
-      });
+  const idReader = req.params.idReader;
+  readersModel.findById(idReader, (err, reader) => {
+    if (err) {
+      return res.status(500).send({ message: err.message });
     };
+    if (!reader) {
+      return res.status(404).send('Leitor(a) não encontrado(a)');
+    } else {
+      const idBook = req.params.idBook;
+      booksModel.findByIdAndDelete(idBook, (err, book) => {
+        if (err) {
+          return res.status(500).send({ message: err.message });
+        };
+        if (!book) {
+          return res.status(404).send('Livro não encontrado');
+        } else {
+          return res.status(200).send('Livro excluído com sucesso');
+        };
+      });
+      const bookToBeDeleted = reader.livros.find(book => book._id == idBook);
+      const index = reader.livros.indexOf(bookToBeDeleted);
+      reader.livros.splice(index, 1);
+      reader.save();
+    }; 
   });
 };
 
