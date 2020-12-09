@@ -1,4 +1,4 @@
-const { booksModel, booksSchema } = require('../models/livros');
+const { booksModel } = require('../models/livros');
 const { readersModel } = require('../models/leitores');
 
 const getAllBooks = (req, res) => {
@@ -28,7 +28,20 @@ const getBooksByReader = (req, res) => {
 };
 
 const getAvailableBooks = (req, res) => {
-  booksModel.find({ disponivel: true }, (err, books) => {
+  const { bairro, titulo, autoria } = req.query;
+  const filters = {}
+
+  if (bairro) {
+    Object.assign(filters, { bairro: bairro });
+  };
+  if (titulo) {
+    Object.assign(filters, { titulo: titulo });
+  };
+  if (autoria) {
+    Object.assign(filters, { autoria: autoria })
+  };
+
+  booksModel.find({ disponivel: true, ...filters }, (err, books) => {
     if (err) {
       return res.status(424).send({ message: err.message });
     };
@@ -102,17 +115,17 @@ const updateLocationAndStatus = (req, res) => {
       return res.status(404).send('Livro não encontrado');
     } else {
       return res.status(200).send(book);
-    };    
-  });
-  
-  readersModel.findOneAndUpdate(
-    { 'livros._id': idBook},
-    { $set: { 'livros.$.bairro': req.body.bairro, 'livros.$.disponivel': req.body.disponivel } },
-    { new: true }, (err, reader) => {
-    if (err) {
-      return res.status(500).send({ message: err.message });
     };
   });
+
+  readersModel.findOneAndUpdate(
+    { 'livros._id': idBook },
+    { $set: { 'livros.$.bairro': req.body.bairro, 'livros.$.disponivel': req.body.disponivel } },
+    { new: true }, (err, reader) => {
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      };
+    });
 };
 
 const deleteBook = (req, res) => {
