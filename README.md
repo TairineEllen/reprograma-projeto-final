@@ -67,16 +67,17 @@ $ npm start
 | GET/leitores                            | Listar todos os leitores                           |
 | GET/leitores/idLeitor                   | Acessar um leitor por seu id                       |
 | GET/leitores/idLeitor/livros            | Listar livros de um determinado leitor             |
-| GET/livros                              | Listar todos os livros                             |
-| GET/livros/disponivel                   | Listar todos os livros disponíveis pra empréstimo  |
 | POST/leitores                           | Cadastrar um novo leitor                           |
 | POST/leitores/login                     | Login do leitor                                    |
 | POST/leitores/idLeitor/livros           | Cadastrar novo livro                               |
 | PUT/leitores/idLeitor                   | Alterar dados de um leitor                         |
 | PUT/leitores/idLeitor/livros/idLivro    | Alterar dados de um livro                          |
-| PATCH/livros/idLivro                    | Alterar status do livro (bairro e disponibilidade) |
 | DELETE/leitores/idLeitor                | Excluir um leitor                                  |
 | DELETE/leitores/idLeitor/livros/idLivro | Excluir um livro                                   |
+| GET/livros                              | Listar todos os livros                             |
+| GET/livros/disponivel                   | Listar todos os livros disponíveis pra empréstimo  |
+| PATCH/livros/idLivro                    | Alterar status do livro (bairro e disponibilidade) |
+
 
 Na rota GET/livros/disponivel, é possível filtrar e buscar os livros por até três parâmetros:
 
