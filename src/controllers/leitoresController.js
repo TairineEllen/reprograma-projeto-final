@@ -1,7 +1,10 @@
 const { readersModel } = require('../models/leitores');
 const { booksModel } = require('../models/livros');
+const bcrypt = require('bcrypt');
 
 const registerNewReader = (req, res) => {
+  const password = bcrypt.hashSync(req.body.senha, 10);
+  req.body.senha = password;
   const newReader = new readersModel(req.body);
   newReader.livros.map(livro => {
     const newBook = new booksModel(livro);
@@ -21,7 +24,7 @@ const registerNewReader = (req, res) => {
 };
 
 const getAllReaders = (req, res) => {
-  readersModel.find({}, { nome: 1, email: 1, livros: 1 }, (err, readers) => {
+  readersModel.find({}, { nome: 1, email: 1, livros: 1}, (err, readers) => {
     if (err) {
       return res.status(424).send({ message: err.message });
     };
@@ -64,6 +67,9 @@ const deleteReader = (req, res) => {
       return res.status(405).send('Leitor possui livros cadastrados e não pode ser excluído.');
     } else {
       readersModel.findByIdAndDelete(idReader, err => {
+        if (err) {
+          return res.status(500).send({ message: err.message });
+        };
         return res.status(200).send('Leitor(a) excluído(a) com sucesso');
       });
     };
