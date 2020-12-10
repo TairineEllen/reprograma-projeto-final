@@ -100,7 +100,7 @@ Na rota GET/livros/disponivel, é possível filtrar e buscar os livros por até 
 </p>
 
 <p align="center">
-Desenvolvido com :fa-heart: por Tairine Ellen com o apoio da {reprograma} 
+Desenvolvido com :black_heart: por Tairine Ellen com o apoio da {reprograma} 
 </p>
 
 <p align="center">
