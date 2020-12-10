@@ -99,16 +99,11 @@ Na rota GET/livros/disponivel, é possível filtrar e buscar os livros por até 
 <img src="./assets/logo.png" alt="menina em frente a janela" border="0" width = "120" />
 </p>
 
-
-
 <p align="center">
-
 Desenvolvido com :fa-heart: por Tairine Ellen com o apoio da {reprograma} 
-
 </p>
 
 <p align="center">
-
 
 <img src="./assets/logo-reprograma.png" alt="logo da reprograma" border="0" width = "200" />
 
