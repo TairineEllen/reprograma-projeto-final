@@ -1,5 +1,8 @@
 const { booksModel } = require('../models/livros');
 const { readersModel } = require('../models/leitores');
+const { auth } = require('./autenticacao');
+const jwt = require('jsonwebtoken');
+const SECRET = process.env.SECRET;
 
 const getAllBooks = (req, res) => {
   booksModel.find((err, books) => {
@@ -11,25 +14,33 @@ const getAllBooks = (req, res) => {
 };
 
 const getBooksByReader = (req, res) => {
-  const idReader = req.params.idReader;
-  readersModel.findById(idReader, (err, reader) => {
+  const token = auth(req, res);
+
+  jwt.verify(token, SECRET, err => {
     if (err) {
-      return res.status(500).send({ message: err.message });
+      return res.status(403).send('Acesso negado: token inválido');
     };
-    if (!reader) {
-      return res.status(500).send('Leitor(a) não encontrado(a)');
-    }
-    if (!reader.livros.length) {
-      return res.status(404).send('Esse(a) leitor(a) ainda não possui livros cadastrados');
-    } else {
-      return res.status(200).send(reader.livros);
-    };
+
+    const idReader = req.params.idReader;
+    readersModel.findById(idReader, (err, reader) => {
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      };
+      if (!reader) {
+        return res.status(500).send('Leitor(a) não encontrado(a)');
+      };
+      if (!reader.livros.length) {
+        return res.status(404).send('Esse(a) leitor(a) ainda não possui livros cadastrados');
+      } else {
+        return res.status(200).send(reader.livros);
+      };
+    });
   });
 };
 
 const getAvailableBooks = (req, res) => {
   const { bairro, titulo, autoria } = req.query;
-  const filters = {}
+  const filters = {};
 
   if (bairro) {
     Object.assign(filters, { bairro: bairro });
@@ -38,7 +49,7 @@ const getAvailableBooks = (req, res) => {
     Object.assign(filters, { titulo: titulo });
   };
   if (autoria) {
-    Object.assign(filters, { autoria: autoria })
+    Object.assign(filters, { autoria: autoria });
   };
 
   booksModel.find({ disponivel: true, ...filters }, (err, books) => {
@@ -54,105 +65,140 @@ const getAvailableBooks = (req, res) => {
 };
 
 const registerNewBook = (req, res) => {
-  const idReader = req.params.idReader;
-  const newBook = new booksModel(req.body);
+  const token = auth(req, res);
 
-  newBook.save(err => {
+  jwt.verify(token, SECRET, err => {
     if (err) {
-      return res.status(500).send({ message: err.message });
+      return res.status(403).send('Acesso negado: token inválido');
     };
-  });
 
-  readersModel.findById(idReader, (err, reader) => {
-    if (err) {
-      return res.status(500).send({ message: err.message });
-    };
-    if (!reader) {
-      return res.status(404).send('Leitor(a) não encontrado(a)')
-    } else {
-      reader.livros.push(newBook);
-      reader.save();
-      return res.status(201).send(reader.livros);
-    };
-  });
-};
+    const idReader = req.params.idReader;
+    const newBook = new booksModel(req.body);
 
-const updateBook = (req, res) => {
-  const idReader = req.params.idReader;
-  readersModel.findById(idReader, (err, reader) => {
-    if (err) {
-      return res.status(500).send({ message: err.message });
-    };
-    if (!reader) {
-      return res.status(404).send('Leitor(a) não encontrado(a)');
-    } else {
-      const idBook = req.params.idBook;
-      booksModel.findByIdAndUpdate(idBook, req.body, { new: true }, (err, book) => {
-        if (err) {
-          return res.status(500).send({ message: err.message });
-        };
-        if (!book) {
-          return res.status(404).send('Livro não encontrado');
-        } else {
-          return res.status(200).send(book);
-        };
-      });
-      const booktToBeUpdated = reader.livros.find(book => book._id == idBook);
-      const index = reader.livros.indexOf(booktToBeUpdated);
-      reader.livros.splice(index, 1, req.body);
-      reader.save();
-    };
-  });
-};
-
-const updateLocationAndStatus = (req, res) => {
-  const idBook = req.params.idBook;
-  booksModel.findByIdAndUpdate(idBook, req.body, { new: true }, (err, book) => {
-    if (err) {
-      return res.status(500).send({ message: err.message });
-    };
-    if (!book) {
-      return res.status(404).send('Livro não encontrado');
-    } else {
-      return res.status(200).send(book);
-    };
-  });
-
-  readersModel.findOneAndUpdate(
-    { 'livros._id': idBook },
-    { $set: { 'livros.$.bairro': req.body.bairro, 'livros.$.disponivel': req.body.disponivel } },
-    { new: true }, (err, reader) => {
+    newBook.save(err => {
       if (err) {
         return res.status(500).send({ message: err.message });
       };
     });
+
+    readersModel.findById(idReader, (err, reader) => {
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      };
+      if (!reader) {
+        return res.status(404).send('Leitor(a) não encontrado(a)');
+      } else {
+        reader.livros.push(newBook);
+        reader.save();
+        return res.status(201).send(reader.livros);
+      };
+    });
+  });
 };
 
-const deleteBook = (req, res) => {
-  const idReader = req.params.idReader;
-  readersModel.findById(idReader, (err, reader) => {
+const updateBook = (req, res) => {
+  const token = auth(req, res);
+
+  jwt.verify(token, SECRET, err => {
     if (err) {
-      return res.status(500).send({ message: err.message });
+      return res.status(403).send('Acesso negado: token inválido');
     };
-    if (!reader) {
-      return res.status(404).send('Leitor(a) não encontrado(a)');
-    } else {
-      const idBook = req.params.idBook;
-      booksModel.findByIdAndDelete(idBook, (err, book) => {
+
+    const idReader = req.params.idReader;
+    readersModel.findById(idReader, (err, reader) => {
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      };
+      if (!reader) {
+        return res.status(404).send('Leitor(a) não encontrado(a)');
+      } else {
+        const idBook = req.params.idBook;
+        booksModel.findByIdAndUpdate(idBook, req.body, { new: true }, (err, book) => {
+          if (err) {
+            return res.status(500).send({ message: err.message });
+          };
+          if (!book) {
+            return res.status(404).send('Livro não encontrado');
+          } else {
+            return res.status(200).send(book);
+          };
+        });
+
+        const booktToBeUpdated = reader.livros.find(book => book._id == idBook);
+        const index = reader.livros.indexOf(booktToBeUpdated);
+        reader.livros.splice(index, 1, req.body);
+        reader.save();
+      };
+    });
+  });
+};
+
+const updateLocationAndStatus = (req, res) => {
+  const token = auth(req, res);
+
+  jwt.verify(token, SECRET, err => {
+    if (err) {
+      return res.status(403).send('Acesso negado: token inválido');
+    };
+
+    const idBook = req.params.idBook;
+    booksModel.findByIdAndUpdate(idBook, req.body, { new: true }, (err, book) => {
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      };
+      if (!book) {
+        return res.status(404).send('Livro não encontrado');
+      } else {
+        return res.status(200).send(book);
+      };
+    });
+
+    readersModel.findOneAndUpdate(
+      { 'livros._id': idBook },
+      { $set: { 'livros.$.bairro': req.body.bairro, 'livros.$.disponivel': req.body.disponivel } },
+      { new: true }, (err, reader) => {
         if (err) {
           return res.status(500).send({ message: err.message });
         };
-        if (!book) {
-          return res.status(404).send('Livro não encontrado');
-        } else {
-          return res.status(200).send('Livro excluído com sucesso');
-        };
-      });
-      const bookToBeDeleted = reader.livros.find(book => book._id == idBook);
-      const index = reader.livros.indexOf(bookToBeDeleted);
-      reader.livros.splice(index, 1);
-      reader.save();
+      }
+    );
+  });
+};
+
+const deleteBook = (req, res) => {
+  const token = auth(req, res);
+
+  jwt.verify(token, SECRET, err => {
+    if (err) {
+      return res.status(403).send('Acesso negado: token inválido');
     };
+
+    const idReader = req.params.idReader;
+    readersModel.findById(idReader, (err, reader) => {
+      if (err) {
+        return res.status(500).send({ message: err.message });
+      };
+      if (!reader) {
+        return res.status(404).send('Leitor(a) não encontrado(a)');
+      } else {
+        const idBook = req.params.idBook;
+        booksModel.findByIdAndDelete(idBook, (err, book) => {
+          if (err) {
+            return res.status(500).send({ message: err.message });
+          };
+          if (!book) {
+            return res.status(404).send('Livro não encontrado');
+          } else {
+            return res.status(200).send('Livro excluído com sucesso');
+          };
+        });
+        
+        const bookToBeDeleted = reader.livros.find(book => book._id == idBook);
+        const index = reader.livros.indexOf(bookToBeDeleted);
+        reader.livros.splice(index, 1);
+        reader.save();
+      };
+    });
   });
 };
 
