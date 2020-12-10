@@ -1,7 +1,7 @@
 # Reprograma - Projeto Final - Gira o Livro
 
 <p align="center">
-<img src="./assets/books.png" alt="livro entre duas setas em direção oposta" border="0" width = "200" />
+<img src="./assets/books.png" alt="livro entre duas setas em direção oposta" border="0" width = "400" />
 </p>
 
 Para o meu projeto, me inspirei em iniciativas como Esqueça Um Livro e Livro Viajante. Ou seja, livros que transitam entre leitores, tornando-se objetos vivos que estão sempre sendo lidos.
@@ -95,7 +95,7 @@ Na rota GET/livros/disponivel, é possível filtrar e buscar os livros por até 
 
 ------------
 
-<p align="left">
+<p align="center">
 <img src="./assets/logo.png" alt="menina em frente a janela" border="0" width = "120" />
 </p>
 
