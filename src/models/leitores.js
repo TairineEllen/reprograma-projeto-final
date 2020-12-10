@@ -16,21 +16,3 @@ module.exports = {
   readersModel,
   readersSchema
 };
-
-// const mongoose = require('mongoose');
-
-// const leitoresSchema = new mongoose.Schema({
-//   codLeitor: { type: Number },
-//   nome: { type: String },
-//   email: { type: String },
-//   senha: { type: String }
-// }, {
-//   versionKey: false
-// });
-
-// const leitoresModel = mongoose.model('leitores', leitoresSchema);
-
-// module.exports = {
-//   leitoresModel,
-//   leitoresSchema
-// };
