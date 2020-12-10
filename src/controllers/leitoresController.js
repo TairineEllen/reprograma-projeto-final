@@ -1,6 +1,8 @@
 const { readersModel } = require('../models/leitores');
 const { booksModel } = require('../models/livros');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const SECRET = process.env.SECRET;
 
 const registerNewReader = (req, res) => {
   const password = bcrypt.hashSync(req.body.senha, 10);
@@ -20,6 +22,25 @@ const registerNewReader = (req, res) => {
       return res.status(500).send({ message: err.message });
     };
     return res.status(201).send(newReader);
+  });
+};
+
+const login = (req, res) => {
+  readersModel.findOne({ email: req.body.email }, (err, reader) => {
+    if (err) {
+      return res.status(500).send({ message: err.message });
+    };
+    if (!reader) {
+      return res.status(404).send('Não existe leitor(a) cadastrado(a) com esse email');
+    };
+    
+    const password = bcrypt.compareSync(req.body.senha, reader.senha);
+    if (!password) {
+      return res.status(403).send('Acesso negado: senha incorreta');
+    };
+
+    const token = jwt.sign({ email: reader.email }, SECRET);
+    return res.status(200).send(token);  
   });
 };
 
@@ -78,6 +99,7 @@ const deleteReader = (req, res) => {
 
 module.exports = {
   registerNewReader,
+  login,
   getAllReaders,
   getReaderById,
   updateReader,

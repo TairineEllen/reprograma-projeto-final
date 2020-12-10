@@ -5,14 +5,17 @@ const { getBooksByReader, registerNewBook, updateBook, deleteBook } = require('.
 
 
 router.post('/', controller.registerNewReader);
-router.post('/:idReader/livros', registerNewBook);
-router.get('/', controller.getAllReaders);
+router.post('/login', controller.login);
+
 router.get('/:idReader', controller.getReaderById);
-router.get('/:idReader/livros', getBooksByReader);
+router.get('/', controller.getAllReaders);
 router.put('/:idReader', controller.updateReader);
-router.put('/:idReader/livros/:idBook', updateBook);
 router.delete('/:idReader', controller.deleteReader);
-router.delete('/:idReader/livros/:idBook', deleteBook);
+
+router.post('/:idReader/livros', registerNewBook);
+router.get('/:idReader/livros', getBooksByReader);
+router.put('/:idReader/livros/:idBook', updateBook);
+router.delete('/idReader/livros/:idBook', deleteBook);
 
 module.exports = router;
 
