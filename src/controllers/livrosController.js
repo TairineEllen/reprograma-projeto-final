@@ -15,7 +15,6 @@ const getAllBooks = (req, res) => {
 
 const getBooksByReader = (req, res) => {
   const token = auth(req, res);
-
   jwt.verify(token, SECRET, err => {
     if (err) {
       return res.status(403).send('Acesso negado: token inválido');
@@ -66,7 +65,6 @@ const getAvailableBooks = (req, res) => {
 
 const registerNewBook = (req, res) => {
   const token = auth(req, res);
-
   jwt.verify(token, SECRET, err => {
     if (err) {
       return res.status(403).send('Acesso negado: token inválido');
@@ -98,7 +96,6 @@ const registerNewBook = (req, res) => {
 
 const updateBook = (req, res) => {
   const token = auth(req, res);
-
   jwt.verify(token, SECRET, err => {
     if (err) {
       return res.status(403).send('Acesso negado: token inválido');
@@ -135,7 +132,6 @@ const updateBook = (req, res) => {
 
 const updateLocationAndStatus = (req, res) => {
   const token = auth(req, res);
-
   jwt.verify(token, SECRET, err => {
     if (err) {
       return res.status(403).send('Acesso negado: token inválido');
@@ -167,7 +163,6 @@ const updateLocationAndStatus = (req, res) => {
 
 const deleteBook = (req, res) => {
   const token = auth(req, res);
-
   jwt.verify(token, SECRET, err => {
     if (err) {
       return res.status(403).send('Acesso negado: token inválido');

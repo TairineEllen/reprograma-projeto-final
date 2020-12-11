@@ -2,12 +2,13 @@ const { readersModel } = require('../models/leitores');
 const { booksModel } = require('../models/livros');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const SECRET = process.env.SECRET;
 const { auth } = require('./autenticacao');
+const SECRET = process.env.SECRET;
 
 const registerNewReader = (req, res) => {
   const password = bcrypt.hashSync(req.body.senha, 10);
   req.body.senha = password;
+  
   const newReader = new readersModel(req.body);
   newReader.livros.map(livro => {
     const newBook = new booksModel(livro);
@@ -104,7 +105,6 @@ const updateReader = (req, res) => {
     });
   });
 };
-
 
 const deleteReader = (req, res) => {
   const token = auth(req, res);
