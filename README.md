@@ -42,6 +42,7 @@ Para o meu projeto, me inspirei em iniciativas como Esqueça Um Livro e Livro Vi
 - mongoose
 - bcrypt
 - jsonwebtoken
+- validator
 
 #### Instruções de instalação
 
