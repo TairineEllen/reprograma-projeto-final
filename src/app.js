@@ -1,8 +1,12 @@
 require('dotenv-safe').config();
 const express = require('express');
-const app = express();
 const mongoose = require('mongoose');
 
+const index = require('./routes/index');
+const leitores = require('./routes/leitoresRoute');
+const books = require('./routes/livrosRoute');
+
+const app = express();
 app.use(express.json());
 
 mongoose.connect(`${process.env.MONGODB_URL}`, {
@@ -16,10 +20,6 @@ db.on('error', console.log.bind(console, 'connection error:'));
 db.once('open', () => {
   console.info('Conexão feita com sucesso');
 });
-
-const index = require('./routes/index');
-const leitores = require('./routes/leitoresRoute');
-const books = require('./routes/livrosRoute');
 
 app.use('/', (req, res, next) => {
   res.header('Access-Control-Allow-Origin', '*');
