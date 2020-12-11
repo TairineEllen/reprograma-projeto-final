@@ -80,7 +80,7 @@ const getReaderById = (req, res) => {
   });
 };
 
-const updateReader = (req, res) => {
+const updateReader = (req, res) => {  
   const token = auth(req, res);
 
   jwt.verify(token, SECRET, err => {
@@ -89,6 +89,10 @@ const updateReader = (req, res) => {
     };
 
     const idReader = req.params.idReader;
+
+    const newPassword = bcrypt.hashSync(req.body.senha, 10);
+    req.body.senha = newPassword;
+
     readersModel.findByIdAndUpdate(idReader, req.body, { new: true }, (err, reader) => {
       if (err) {
         return res.status(500).send({ message: err.message });
@@ -100,6 +104,7 @@ const updateReader = (req, res) => {
     });
   });
 };
+
 
 const deleteReader = (req, res) => {
   const token = auth(req, res);
