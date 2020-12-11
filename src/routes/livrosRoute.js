@@ -7,5 +7,3 @@ router.get('/disponivel', controller.getAvailableBooks);
 router.patch('/:idBook', controller.updateLocationAndStatus);
 
 module.exports = router;
-
-
