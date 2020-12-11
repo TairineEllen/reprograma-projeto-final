@@ -13,7 +13,7 @@ Para o meu projeto, me inspirei em iniciativas como Esqueça Um Livro e Livro Vi
 - Ao cadastrar o livro, além de título e autoria, o leitor deve indicar em que bairro se encontra e, claro, indicar que está livre para empréstimo.
 - Um usuário **não** cadastrado tem acesso a todos os livros disponíveis para empréstimo, podendo filtrá-los por bairro e/ou buscar direamente por título e/ou autoria.
 - Porém, para realizar o empréstimo, o usuário precisa se cadastrar e realizar o login.
-- Ao escolher o livro desejado, o usuário entra em contato como o dono solicitando o empréstimo e marcando um ponto de encontro para receber o livro.
+- Ao escolher o livro desejado, o usuário entra em contato com o dono solicitando o empréstimo e marcando um ponto de encontro para receber o livro.
 - Com o livro em mãos, o usuário altera o bairro cadastrado para o seu próprio bairro e altera o status do livro para não disponível.
 - Quando o usuário terminar a leitura, o status é alterado novamente para disponível e o livro volta para a lista de empréstimos.
 
