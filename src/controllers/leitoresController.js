@@ -54,7 +54,7 @@ const getAllReaders = (req, res) => {
       return res.status(403).send('Acesso negado: token inválido');
     };
 
-    readersModel.find({}, { nome: 1, email: 1, livros: 1 }, (err, readers) => {
+    readersModel.find({}, { _id: 0, nome: 1, email: 1, livros: 1 }, (err, readers) => {
       if (err) {
         return res.status(424).send({ message: err.message });
       };
@@ -72,7 +72,7 @@ const getReaderById = (req, res) => {
     };
 
     const idReader = req.params.idReader;
-    readersModel.findById(idReader, { nome: 1, email: 1, livros: 1 }, (err, reader) => {
+    readersModel.findById(idReader, {nome: 1, email: 1, livros: 1 }, (err, reader) => {
       if (!reader) {
         return res.status(404).send('Leitor não encontrado');
       };
