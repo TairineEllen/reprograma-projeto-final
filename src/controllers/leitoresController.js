@@ -5,26 +5,33 @@ const jwt = require('jsonwebtoken');
 const { auth } = require('./autenticacao');
 const SECRET = process.env.SECRET;
 
-const registerNewReader = (req, res) => {
+const registerNewReader = async (req, res) => {
   const password = bcrypt.hashSync(req.body.senha, 10);
   req.body.senha = password;
-  
-  const newReader = new readersModel(req.body);
-  newReader.livros.map(livro => {
-    const newBook = new booksModel(livro);
-    newBook.save(err => {
+
+  const leitor = await readersModel.findOne({ email: req.body.email });
+
+  if (leitor) {
+    return res.send('Email já cadastrado');
+  } else {
+    const newReader = new readersModel(req.body);
+
+    newReader.livros.map(livro => {
+      const newBook = new booksModel(livro);
+      newBook.save(err => {
+        if (err) {
+          return res.status(500).send({ message: err.message });
+        };
+      });
+    });
+
+    newReader.save((err) => {
       if (err) {
         return res.status(500).send({ message: err.message });
       };
+      return res.status(201).send(newReader);
     });
-  });
-
-  newReader.save((err) => {
-    if (err) {
-      return res.status(500).send({ message: err.message });
-    };
-    return res.status(201).send(newReader);
-  });
+  };
 };
 
 const login = (req, res) => {
@@ -72,7 +79,7 @@ const getReaderById = (req, res) => {
     };
 
     const idReader = req.params.idReader;
-    readersModel.findById(idReader, {nome: 1, email: 1, livros: 1 }, (err, reader) => {
+    readersModel.findById(idReader, { nome: 1, email: 1, livros: 1 }, (err, reader) => {
       if (!reader) {
         return res.status(404).send('Leitor não encontrado');
       };
@@ -81,7 +88,7 @@ const getReaderById = (req, res) => {
   });
 };
 
-const updateReader = (req, res) => {  
+const updateReader = (req, res) => {
   const token = auth(req, res);
 
   jwt.verify(token, SECRET, err => {
